@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GuideBox · סקר שוק ותוכנית עסקית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15302F; --muted:#5A6B6A; --faint:#849796; --paper:#F4F7F6; --surface:#FFFFFF;
+    --teal:#0E7C7B; --teal-deep:#0A5453; --teal-tint:#E2EFEE; --teal-line:#C9DEDC;
+    --amber:#D98828; --amber-tint:#FBEDD7;
+    --pos:#2E7D5B; --pos-tint:#E2F0E9; --neg:#BF4E37; --neg-tint:#F7E5E0;
+    --border:#DAE5E3; --hair:#E8EFEE;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Rubik',system-ui,sans-serif; font-weight:400; line-height:1.7;
+    font-size:16.5px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:0 26px}
+  h1,h2,h3,h4{font-family:'Heebo',sans-serif; line-height:1.2; margin:0; font-weight:800}
+  .num{font-variant-numeric:tabular-nums; font-feature-settings:"tnum"}
+  a{color:var(--teal-deep)}
+
+  /* ===== Cover ===== */
+  .cover{background:linear-gradient(160deg,var(--teal-deep) 0%, var(--teal) 70%); color:#fff; padding:64px 0 56px; position:relative; overflow:hidden}
+  .cover::after{content:""; position:absolute; left:-120px; top:-120px; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle,rgba(217,136,40,.32),transparent 65%)}
+  .cover .wrap{position:relative; z-index:2}
+  .brandrow{display:flex; align-items:center; gap:13px; margin-bottom:40px}
+  .coin{width:42px;height:42px;border-radius:50%;background:var(--amber);display:grid;place-items:center;color:#fff;font-family:'Heebo';font-weight:900;font-size:24px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  .brandrow b{font-family:'Heebo';font-weight:800;font-size:20px;letter-spacing:.2px}
+  .brandrow span{color:rgba(255,255,255,.7);font-size:14px;margin-inline-start:auto}
+  .cover h1{font-size:46px; font-weight:900; max-width:18ch; line-height:1.12; margin-bottom:18px}
+  .cover .lede{font-size:19px; color:rgba(255,255,255,.9); max-width:54ch; font-weight:300}
+  .cover .meta{margin-top:34px; display:flex; gap:30px; flex-wrap:wrap; font-size:14px; color:rgba(255,255,255,.78)}
+  .cover .meta b{color:#fff;font-family:'Heebo';font-weight:700}
+
+  /* ===== Section scaffolding ===== */
+  section{padding:52px 0; border-bottom:1px solid var(--hair)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Heebo';font-weight:700;font-size:12.5px;letter-spacing:1.5px;color:var(--teal);text-transform:uppercase;margin-bottom:14px}
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--amber);display:inline-block}
+  h2.title{font-size:31px; font-weight:900; margin-bottom:8px}
+  .sub{color:var(--muted); font-size:17px; max-width:62ch; margin-bottom:30px}
+  p{margin:0 0 16px}
+  .lead-p{font-size:17.5px}
+
+  /* ===== TL;DR answer box ===== */
+  .answer{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:30px 30px 24px;box-shadow:0 1px 0 rgba(21,48,47,.04)}
+  .answer h3{font-size:20px;margin-bottom:14px;color:var(--teal-deep)}
+  .answer p{margin-bottom:12px}
+  .answer .kbig{font-family:'Heebo';font-weight:900;color:var(--teal);font-size:1.05em}
+
+  /* ===== KPI strip ===== */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0 4px}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 18px}
+  .kpi .v{font-family:'Heebo';font-weight:900;font-size:28px;color:var(--teal-deep);line-height:1}
+  .kpi .v small{font-size:15px;font-weight:700;color:var(--muted)}
+  .kpi .l{font-size:13px;color:var(--muted);margin-top:7px}
+
+  /* ===== Tables ===== */
+  .tablecard{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:8px 0 18px}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  caption{caption-side:top;text-align:right;padding:16px 20px 4px;font-family:'Heebo';font-weight:700;color:var(--ink);font-size:16px}
+  th,td{padding:12px 16px;text-align:right;border-bottom:1px solid var(--hair)}
+  thead th{background:var(--teal-tint);font-family:'Heebo';font-weight:700;font-size:13.5px;color:var(--teal-deep);border-bottom:1px solid var(--teal-line)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FAFCFB}
+  td.n,th.n{font-variant-numeric:tabular-nums;text-align:center}
+  .total-row td{background:#F3F8F7;font-weight:600}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;font-family:'Heebo';padding:2px 9px;border-radius:20px;line-height:1.7}
+  .tag.t{background:var(--teal-tint);color:var(--teal-deep)}
+  .tag.a{background:var(--amber-tint);color:var(--amber)}
+  .tag.g{background:var(--pos-tint);color:var(--pos)}
+
+  /* ===== Funnel / TAM ===== */
+  .funnel{display:flex;flex-direction:column;gap:10px;margin:6px 0 18px}
+  .frow{display:flex;align-items:center;gap:16px}
+  .fbar{height:62px;border-radius:12px;display:flex;flex-direction:column;justify-content:center;padding:0 22px;color:#fff}
+  .fbar b{font-family:'Heebo';font-weight:900;font-size:22px;line-height:1}
+  .fbar span{font-size:12.5px;opacity:.92}
+  .fnote{font-size:14px;color:var(--muted);flex:1}
+  .f1{background:var(--teal-deep);width:100%}
+  .f2{background:var(--teal);width:72%}
+  .f3{background:#3FA09E;width:42%}
+  .f4{background:var(--amber);width:20%}
+
+  /* ===== Break-even ladder (signature) ===== */
+  .ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:8px 0 8px}
+  .rung{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;position:relative;overflow:hidden}
+  .rung::before{content:"";position:absolute;inset-block-start:0;inset-inline-start:0;width:100%;height:4px}
+  .rung.r1::before{background:var(--pos)} .rung.r2::before{background:var(--teal)} .rung.r3::before{background:var(--amber)}
+  .rung .step{font-family:'Heebo';font-weight:700;font-size:12px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+  .rung .big{font-family:'Heebo';font-weight:900;font-size:40px;color:var(--ink);line-height:1;margin:8px 0 2px}
+  .rung .big small{font-size:16px;font-weight:700;color:var(--muted)}
+  .rung .desc{font-size:14px;color:var(--muted);margin-top:8px}
+  .rung .when{margin-top:13px;font-size:13px;font-weight:600;color:var(--teal-deep);border-top:1px dashed var(--border);padding-top:11px}
+
+  /* ===== two-col cards ===== */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:6px 0 12px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+  .card h4{font-size:17px;margin-bottom:10px}
+  .card.pos{border-inline-start:4px solid var(--pos)}
+  .card.risk{border-inline-start:4px solid var(--neg)}
+  ul.clean{margin:0;padding-inline-start:20px}
+  ul.clean li{margin-bottom:8px;font-size:15px}
+  ul.clean li::marker{color:var(--teal)}
+
+  .note{font-size:13.5px;color:var(--muted);background:var(--teal-tint);border-radius:10px;padding:12px 15px;margin:14px 0}
+  .note b{color:var(--teal-deep)}
+
+  .callout-amber{background:var(--amber-tint);border:1px solid #F0D8AE;border-radius:14px;padding:20px 22px;margin:16px 0}
+  .callout-amber h4{font-size:17px;color:var(--amber);margin-bottom:8px}
+
+  /* timeline */
+  .tl{position:relative;margin:10px 0 4px;padding-inline-start:26px}
+  .tl::before{content:"";position:absolute;inset-block:6px;inset-inline-start:6px;width:2px;background:var(--teal-line)}
+  .tlitem{position:relative;margin-bottom:20px}
+  .tlitem::before{content:"";position:absolute;inset-inline-start:-26px;top:5px;width:13px;height:13px;border-radius:50%;background:var(--teal);border:3px solid var(--paper)}
+  .tlitem h4{font-size:16px;margin-bottom:3px}
+  .tlitem .ph{font-family:'Heebo';font-weight:700;font-size:12.5px;color:var(--amber);letter-spacing:.5px}
+  .tlitem p{font-size:14.5px;color:var(--muted);margin:2px 0 0}
+
+  footer{padding:40px 0 60px;color:var(--muted);font-size:13px}
+  footer h4{font-size:14px;font-family:'Heebo';color:var(--ink);margin-bottom:10px}
+  footer ol{margin:0;padding-inline-start:18px}
+  footer li{margin-bottom:5px}
+
+  @media (max-width:760px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .ladder{grid-template-columns:1fr}
+    .grid2{grid-template-columns:1fr}
+    .cover h1{font-size:34px}
+    h2.title{font-size:25px}
+    .fnote{display:none}
+    table{font-size:13.5px}
+    th,td{padding:10px 10px}
+  }
+  @media print{body{background:#fff}.cover{background:var(--teal-deep)}section{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="wrap">
+    <div class="brandrow">
+      <div class="coin">G</div>
+      <b>GuideBox</b>
+      <span>סקר שוק · תוכנית עסקית · מודל רווחיות</span>
+    </div>
+    <h1>מתי ואיך GuideBox הופך לעסק רווחי בשוק הישראלי</h1>
+    <p class="lede">ניתוח ביקוש ריאלי, מיפוי מתחרים, יחידות כלכליות מלאות (כולל עלויות AI ותשתית), ומודל נקודת איזון לפי שלושה תרחישי אימוץ.</p>
+    <div class="meta">
+      <div><b>תחום</b><br>פלטפורמת ניהול קליניקה למטפלים</div>
+      <div><b>שוק יעד</b><br>ישראל · RTL · עברית</div>
+      <div><b>מבדל מרכזי</b><br>"בין הפגישות" + AI + חיפוש סמנטי</div>
+      <div><b>מטבע</b><br>₪ (שער המרה ~3.7 ₪/$)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EXEC SUMMARY ============ -->
+<section id="summary">
+  <div class="wrap">
+    <span class="eyebrow">תקציר מנהלים</span>
+    <h2 class="title">השורה התחתונה תחילה</h2>
+    <div class="answer">
+      <h3>התשובה הקצרה לשאלה "מתי נהיים רווחיים"</h3>
+      <p>בזכות מבנה עלויות תוכנה (שולי רווח גולמי גבוהים) ועלויות הקמה נמוכות בישראל, GuideBox מגיע ל<span class="kbig">איזון תזרימי על העלויות הקשיחות כבר עם ~25 מטפלים משלמים</span> — סף שאפשר להגיע אליו תוך מספר חודשים מסיום הפיילוט.</p>
+      <p>הסף המשמעותי באמת הוא <span class="kbig">~200 מטפלים משלמים</span>: זו הנקודה שבה ההכנסה מכסה גם משכורת מייסד סבירה (~20,000 ₪/חודש). בתרחיש הבסיס מגיעים לשם סביב <b>חודש 18–22</b>.</p>
+      <p>הפיכת GuideBox ל<b>עסק צמיחה ממומן עם צוות קטן</b> דורשת <span class="kbig">~400–500 מטפלים משלמים</span> — שהם רק כ-2.5% מקהל היעד הרלוונטי (SAM). המגבלה אינה גודל השוק אלא <b>קצב האימוץ מול מתחרים מבוססים</b>.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v num">~15–20K</div><div class="l">מטפלים בקליניקה פרטית שמתאימים למוצר (SAM)</div></div>
+      <div class="kpi"><div class="v num">~140<small> ₪</small></div><div class="l">ARPU חודשי משוער (מנוי + קרדיטים AI)</div></div>
+      <div class="kpi"><div class="v num">~84<small>%</small></div><div class="l">שולי רווח גולמי משוערים למטפל פעיל</div></div>
+      <div class="kpi"><div class="v num">~25</div><div class="l">מטפלים לאיזון על העלויות הקשיחות</div></div>
+    </div>
+    <p class="note"><b>שקיפות מתודולוגית:</b> כל המספרים כאן הם הערכות מודל המבוססות על נתוני שוק פומביים (מצוטטים בסוף) ועל הנחות תמחור שצריך לאמת מול הפיילוט בפועל. הם נועדו לקבלת החלטות, לא כתחזית מחייבת. כל הנחה ניתנת לשינוי בקלות במודל.</p>
+  </div>
+</section>
+
+<!-- ============ MARKET SURVEY ============ -->
+<section id="market">
+  <div class="wrap">
+    <span class="eyebrow">חלק א' · סקר שוק</span>
+    <h2 class="title">גודל השוק והביקוש הריאלי בישראל</h2>
+    <p class="sub">כמה אנשי מקצוע באמת יכולים וירצו לשלם על המוצר — ובאיזו עוצמה הביקוש הזה ממומש בפועל.</p>
+
+    <p class="lead-p">קהל היעד של GuideBox אינו "כל המטפלים", אלא <b>אנשי מקצוע שמנהלים קליניקה פרטית או עובדים במרכז טיפולי קטן</b> — אלה שיש להם אחריות ניהולית (יומן, תיעוד, גבייה, חשבוניות) ושעבורם הזרימה של "בין הפגישות" רלוונטית. נפרק את השוק לשכבות:</p>
+
+    <div class="funnel">
+      <div class="frow">
+        <div class="fbar f1"><b class="num">~58,000</b><span>סך אנשי מקצוע בבריאות הנפש והטיפול הרגשי (TAM רחב)</span></div>
+        <div class="fnote">פסיכולוגים בעלי רישיון (~14,300 עד גיל 67), עו"ס רשומים (~44,000), פסיכותרפיסטים, מטפלים בהבעה ויצירה, מטפלים זוגיים/CBT, ועוד. רובם מועסקים במגזר הציבורי.</div>
+      </div>
+      <div class="frow">
+        <div class="fbar f2"><b class="num">~25–35K</b><span>עוסקים בטיפול פרטי (במלא או בחלקיות)</span></div>
+        <div class="fnote">כולל פרא-רפואי משיק (קלינאי תקשורת, מרפאים בעיסוק, דיאטנים) שגם הם רוכשים תוכנת קליניקה.</div>
+      </div>
+      <div class="frow">
+        <div class="fbar f3"><b class="num">~15–20K</b><span>SAM — מתאימים למבדל של GuideBox</span></div>
+        <div class="fnote">מטפלים שעבורם "בין הפגישות", סיכומי AI ותוכן מותאם הם ערך אמיתי — לא רק יומן וחשבונית.</div>
+      </div>
+      <div class="frow">
+        <div class="fbar f4"><b class="num">~300–600</b><span>SOM — בר-השגה ריאלי ב-3 שנים</span></div>
+        <div class="fnote">כ-2–4% מה-SAM. שאיפה סבירה בהינתן תחרות ומחזור מכירות איטי בקהל שמרני.</div>
+      </div>
+    </div>
+
+    <h3 style="font-size:19px;margin:26px 0 10px">דינמיקת הביקוש — מה שצריך להכיר על הקהל הזה</h3>
+    <div class="grid2">
+      <div class="card pos">
+        <h4>רוחות גב</h4>
+        <ul class="clean">
+          <li><b>שוק שגדל בהתמדה:</b> מספר רישיונות הפסיכולוגיה החדשים עולה (710 ב-2023 מול 511 ב-2010), והביקוש לטיפול רגשי גבוה מתמיד.</li>
+          <li><b>"תוכנת קליניקה כבר לא מותרות":</b> הקהל כבר מחונך לרעיון של מערכת בענן — לא צריך לחנך מאפס.</li>
+          <li><b>רגישות לעברית/RTL ולסודיות:</b> בדיוק הנקודה שבה שירותים גלובליים נכשלים ובה GuideBox חזק.</li>
+          <li><b>AI מתחיל להיתפס כסטנדרט:</b> מתחרים כבר מפרסמים "סיכומי AI" — מה שמכשיר את הקרקע אך גם מעלה את הרף.</li>
+        </ul>
+      </div>
+      <div class="card risk">
+        <h4>חיכוכים שמאטים אימוץ</h4>
+        <ul class="clean">
+          <li><b>קהל שמרן ורגיש למחיר:</b> מטפלים עצמאיים בודקים לאט ומפחדים ממחויבות.</li>
+          <li><b>עלויות מעבר אמיתיות:</b> מי שכבר על מערכת קיימת צריך להעביר נתונים ולשנות הרגלים.</li>
+          <li><b>החלטה רגשית סביב סודיות:</b> כל ספק נבחן על אמון, לא רק על פיצ'רים.</li>
+          <li><b>מחזור מכירה דרך המלצות:</b> הערוצים הם קהילות מקצועיות (פסיכולוגיה עברית, בטיפולנט, איגודים) — אורגני ואיטי, אך זול ובעל אמון גבוה.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note"><b>תובנת מפתח:</b> בשוק הזה גודל השוק לעולם אינו צוואר הבקבוק. כדי להגיע ל-500 לקוחות צריך "רק" ~2.5% מקהל היעד. הקושי כולו ב<b>מהירות ובאמון</b> — ולכן אסטרטגיית ההפצה (קהילות, פיילוטים, המלצות) חשובה הרבה יותר מגודל ה-TAM.</p>
+  </div>
+</section>
+
+<!-- ============ COMPETITION ============ -->
+<section id="competition">
+  <div class="wrap">
+    <span class="eyebrow">חלק ב' · נוף תחרותי</span>
+    <h2 class="title">מי כבר נמצא בשוק — ואיפה הפער</h2>
+    <p class="sub">השוק הישראלי לתוכנת קליניקה למטפלים בשל ומאוכלס, אך רובו ממוקד בניהול אדמיניסטרטיבי. כמעט אף אחד לא בנוי סביב "בין הפגישות".</p>
+
+    <div class="tablecard">
+      <table>
+        <caption>מתחרים מרכזיים בישראל (תמחור פומבי, אמת מול אתריהם)</caption>
+        <thead>
+          <tr><th>מערכת</th><th>מיצוב</th><th class="n">מחיר חודשי</th><th>AI</th><th>הערה תחרותית</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>CliniKit</b></td><td>מטפלים, "הכל כלול"</td><td class="n">~90 ₪</td><td><span class="tag g">סיכומי AI</span></td><td>המתחרה הקרוב ביותר במיצוב ובמחיר. רף ה-AI כבר הוצב.</td></tr>
+          <tr><td><b>טיפולוג (Arbox)</b></td><td>נרכשה ע"י ארבוקס 2025</td><td class="n">משתנה</td><td><span class="tag a">חלקי</span></td><td>גב חזק (ארבוקס), בסיס לקוחות גדול, יכולות צמיחה עסקית.</td></tr>
+          <tr><td><b>My-Cliniq</b></td><td>"בידי מטפלים, למטפלים"</td><td class="n">בינוני</td><td><span class="tag a">בסיסי</span></td><td>מיתוג חם ואסתטי, נאמנות גבוהה בקהל.</td></tr>
+          <tr><td><b>Clinicloud</b></td><td>בוטיק, ללא הגבלת מטופלים</td><td class="n">בינוני</td><td>—</td><td>דגש על שירות אישי ותמיכה מהירה.</td></tr>
+          <tr><td><b>בייס CRM</b></td><td>רב-מטפלים, שכבת חינם</td><td class="n">חינם / מדורג</td><td><span class="tag a">תמלול</span></td><td>שכבת חינם מורידה רף כניסה; חזק לקליניקות רב-מטפלים.</td></tr>
+          <tr><td><b>Medform</b></td><td>שיניים/אסתטיקה + רפואי</td><td class="n">לפי הצעה</td><td><span class="tag g">AI + CRM</span></td><td>פחות ממוקד בבריאות הנפש; חופף חלקית.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>המסקנה ברורה: כל המתחרים מתחרים על אותו מגרש — <b>יומן, תיעוד, חשבוניות, תזכורות</b>. ה-AI שלהם הוא תוסף ("סיכום פגישה") ולא ליבה. אף אחד מהם לא בנה את המוצר סביב <b>מה שקורה בין פגישה לפגישה</b>: משימות למטופל, ספריית כלים, חוויית מטופל באפליקציה, ותוכן קליני מותאם אישית מבוסס חיפוש וקטורי.</p>
+
+    <div class="callout-amber">
+      <h4>הטריז של GuideBox</h4>
+      <p style="margin:0">המבדל אינו "עוד מערכת ניהול עם AI" אלא <b>פלטפורמת מעורבות בין-פגישתית</b>. זה גם החוזק (קטגוריה חדשה, ערך שלא קיים) וגם הסיכון (צריך לחנך את השוק לערך שהוא עדיין לא מחפש). האסטרטגיה הנכונה: להיכנס דרך ה"שולחן ההימורים" המוכר (יומן+חשבונית+סיכומי AI ברמה גבוהה) ולמכור את ה"בין הפגישות" כשדרוג שמייצר נאמנות והיקשרות (stickiness) — לא כתנאי כניסה.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ UNIT ECONOMICS ============ -->
+<section id="unit">
+  <div class="wrap">
+    <span class="eyebrow">חלק ג' · יחידות כלכליות</span>
+    <h2 class="title">כמה מכניס מטפל — וכמה הוא עולה</h2>
+    <p class="sub">כאן נמצא הלב של שאלת הרווחיות. מכיוון ש-GuideBox עתיר-AI, נפרק במדויק את עלות ה-AI מול ההכנסה ממנו.</p>
+
+    <h3 style="font-size:19px;margin:8px 0 8px">צד ההכנסה — מנוי + מטבע קרדיטים (Gidi)</h3>
+    <p>המודל המומלץ הוא <b>היברידי</b>: מנוי בסיס יציב (הכנסה צפויה) פלוס קרדיטים לפעולות AI (הכנסה שגדלה עם השימוש ומשמרת שוליים). זה גם מבדל אותך מ-CliniKit שגובה מחיר אחיד שטוח.</p>
+    <div class="tablecard">
+      <table>
+        <caption>הרכב ARPU חודשי משוער למטפל פעיל</caption>
+        <thead><tr><th>רכיב</th><th>הנחה</th><th class="n">תרומה חודשית</th></tr></thead>
+        <tbody>
+          <tr><td>מנוי בסיס per-seat</td><td>מהמודל ההיברידי שלך — לאימות מול מסמך התמחור</td><td class="n">~99 ₪</td></tr>
+          <tr><td>קרדיטים AI (Gidi)</td><td>מתומחר מעל באפר ה-benchmark ($0.62) → ~70–85% שוליים</td><td class="n">~41 ₪</td></tr>
+          <tr class="total-row"><td>ARPU משולב</td><td>בסיס למודל</td><td class="n">~140 ₪</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><b>שני המספרים הללו הם הפינה היחידה שעדיין צריך לאמת מול מסמך התמחור ההיברידי שלך:</b> מחיר ה-per-seat הסופי ושווי ה-₪ לקרדיט. <b>צד העלות, לעומת זאת, כבר נעול</b> בזכות BM-001 — ולכן השוליים למטה הם מהקרקע, לא מההערכה.</p>
+
+    <h3 style="font-size:19px;margin:22px 0 8px">צד העלות — נתוני אמת מ-Benchmark BM-001</h3>
+    <p>אלו לא הערכות — אלה <b>עלויות מדודות</b> מה-benchmark שביצעת (BM-001, יוני 2026) על המחסנית האמיתית: n8n + Convex + Pinecone, אחרי מעבר לארכיטקטורת Fan-out/Fan-in. עלות פעולת AI בודדת היא סנטים בודדים:</p>
+    <div class="tablecard">
+      <table>
+        <caption>עלות AI מדודה לפעולה — BM-001 (אחרי אופטימיזציה)</caption>
+        <thead><tr><th class="n">תרחיש</th><th>פעולה</th><th class="n">עלות מדודה</th><th class="n">שינוי מהבסיס</th></tr></thead>
+        <tbody>
+          <tr><td class="n">S1</td><td>העלאת סיכום (מטפל+מטופל)</td><td class="n">~$0.045</td><td class="n">↓ מ-$0.05</td></tr>
+          <tr><td class="n">S1</td><td>העלאת סיכום (מטפל בלבד)</td><td class="n">~$0.023</td><td class="n">—</td></tr>
+          <tr><td class="n">S2</td><td>סיכום מטופל מלא</td><td class="n">~$0.10</td><td class="n" style="color:var(--pos);font-weight:600">↓ 50% מ-$0.20</td></tr>
+          <tr><td class="n">S3</td><td>מסמך רשמי</td><td class="n">~$0.06</td><td class="n">ללא שינוי</td></tr>
+          <tr><td class="n">S4</td><td>סיכום דו-שורתי</td><td class="n">~$0.006</td><td class="n">חדש</td></tr>
+          <tr><td class="n">S5</td><td>ניתוח טיפולי</td><td class="n">~$0.008</td><td class="n">חדש</td></tr>
+          <tr><td class="n">S6</td><td>צ'אט מטופל אינטראקטיבי</td><td class="n">~$0.03</td><td class="n" style="color:var(--pos);font-weight:600">↓ 83% מ-$0.18</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>בצירוף לפי דפוסי שימוש אמיתיים (4 פגישות למטופל בחודש), ה-benchmark מצא <b>עלות AI כוללת של $0.31–$0.62 למשתמש פעיל בחודש</b> — חסומה, צפויה, וללא הסחפות לאורך זמן. שני מנועי העלות העיקריים: סיכומים מלאים (S2) ומסמכים רשמיים (S3). ה-benchmark עצמו ממליץ לתמחר קרדיטים עם באפר מעל $0.62 כדי לספוג משתמשים כבדים ותנודות במחירי LLM.</p>
+    <p class="note"><b>ה-benchmark מאשר: ה-AI הוא מרכז רווח, לא מרכז עלות.</b> בעלות מדודה של $0.31–$0.62 למשתמש פעיל, כל עוד קרדיט מתומחר מעל הבאפר הזה — ככל שמשתמשים ב-AI יותר, השוליים משתפרים. שתי נקודות תורפה שה-benchmark סימן וכדאי לסגור כדי להגן על השוליים: (1) חסרות מגבלות פלט (max output) על חלק מהזרימות — אם המודל "רץ חופשי" העלות מזנקת; (2) צריך אילוצי תווים בשכבת ה-UI/Gateway שיעצרו טקסט ענק לפני שהוא מגיע ל-LLM.</p>
+
+    <div class="tablecard">
+      <table>
+        <caption>שולי תרומה למטפל פעיל (חודשי)</caption>
+        <thead><tr><th>שורה</th><th class="n">סכום</th><th>הערה</th></tr></thead>
+        <tbody>
+          <tr><td>הכנסה (ARPU)</td><td class="n">140 ₪</td><td>מנוי + קרדיטים</td></tr>
+          <tr><td>עלות AI / LLM (COGS לקרדיטים)</td><td class="n">(~6 ₪)</td><td>BM-001: ~$0.45 למטופל פעיל × עומס תיקים — מגובה בהכנסת הקרדיטים</td></tr>
+          <tr><td>עמלת סליקה</td><td class="n">(3 ₪)</td><td>~2% מהעסקה (טרנזילה ~1.3%+, ישראכרט וכו')</td></tr>
+          <tr><td>תשתית שולית למשתמש</td><td class="n">(3 ₪)</td><td>אחסון/וקטורים/חישוב לפי שימוש</td></tr>
+          <tr><td>תמיכה ושירות (הקצאה)</td><td class="n">(7 ₪)</td><td>גדל עם בסיס הלקוחות</td></tr>
+          <tr class="total-row"><td>שולי תרומה</td><td class="n">~121 ₪ (≈86%)</td><td>זה מה שכל מטפל "תורם" לכיסוי הקבועים</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>לצורך שמרנות, במודל ההמשך אני משתמש ב<b>שולי תרומה של ~115 ₪ למטפל</b>.</p>
+  </div>
+</section>
+
+<!-- ============ COST STRUCTURE ============ -->
+<section id="costs">
+  <div class="wrap">
+    <span class="eyebrow">חלק ד' · מבנה עלויות</span>
+    <h2 class="title">עלויות הקמה, תפעול ותשתית — פירוט מלא</h2>
+    <p class="sub">כל מה שיוצא מהכיס: הקמת העסק החד-פעמית, העלויות הקבועות החודשיות, ועלויות התשתית הטכנולוגית.</p>
+
+    <h3 style="font-size:19px;margin:6px 0 8px">1 · עלויות הקמה חד-פעמיות</h3>
+    <div class="tablecard">
+      <table>
+        <thead><tr><th>סעיף</th><th class="n">מסלול רזה (עוסק מורשה)</th><th class="n">מסלול חברה בע"מ</th></tr></thead>
+        <tbody>
+          <tr><td>רישום עסק בכל הרשויות</td><td class="n">~250–500 ₪</td><td class="n">אגרת רישום ~2,645 ₪</td></tr>
+          <tr><td>אגרה שנתית / עו"ד הקמה</td><td class="n">—</td><td class="n">~1,500 ₪ + עו"ד 1,500–3,000 ₪</td></tr>
+          <tr><td>מסמכים משפטיים (תקנון, מדיניות פרטיות, DPA למידע רפואי)</td><td class="n">3,000–8,000 ₪</td><td class="n">3,000–8,000 ₪</td></tr>
+          <tr><td>מיתוג/לוגו (כבר קיים — Gidi)</td><td class="n">בוצע</td><td class="n">בוצע</td></tr>
+          <tr class="total-row"><td>סה"כ הקמה</td><td class="n">~3,500–8,500 ₪</td><td class="n">~9,000–15,000 ₪</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><b>המלצה:</b> בשלב הפיילוט והלקוחות הראשונים — <b>עוסק מורשה</b> (זול, פשוט, דיווח דו-חודשי). מעבר ל<b>חברה בע"מ</b> רק כשניגשים לגיוס/רשות החדשנות או חוצים מחזור משמעותי — אז עלות ההתאגדות מוצדקת.</p>
+
+    <h3 style="font-size:19px;margin:22px 0 8px">2 · עלויות תפעול קבועות (חודשי, שלב מוקדם · עוסק מורשה · סולו)</h3>
+    <div class="tablecard">
+      <table>
+        <thead><tr><th>סעיף</th><th class="n">עלות חודשית</th><th>הערה</th></tr></thead>
+        <tbody>
+          <tr><td>Convex (backend · DB · realtime)</td><td class="n">~95 ₪</td><td>$25 Pro per-seat (או חינם עד שנה דרך תוכנית הסטארטאפ). אחסון $0.22/GB · EU מכפיל 1.3x</td></tr>
+          <tr><td>Clerk (אימות · 3 תפקידים)</td><td class="n">0 → 95 ₪</td><td>חינם עד 50K MRU; מעל זה $0.02/MRU. גם מטופלים לא מפוצצים את העלות</td></tr>
+          <tr><td>n8n (אוטומציות) — self-hosted</td><td class="n">~20–40 ₪</td><td>Community = executions בלתי מוגבלים על VPS ~$5–10; הענן נחסם מהר לפי executions</td></tr>
+          <tr><td>Pinecone (חיפוש וקטורי)</td><td class="n">0 → 185 ₪</td><td>Starter חינם עד 2GB; Standard מינ' $50</td></tr>
+          <tr><td>שירותי צד-ג' (SMS ~$0.25/הודעה במעבר, מייל, דומיין, ניטור)</td><td class="n">~150 ₪</td><td>עלות ה-SMS עוברת ישירות ללקוח</td></tr>
+          <tr><td>שער סליקה — דמי בסיס</td><td class="n">~65 ₪</td><td>+ עמלת עסקה ~1.3–2% (בצד ההכנסה)</td></tr>
+          <tr><td>רואה חשבון / הנהלת חשבונות</td><td class="n">~400 ₪</td><td>עוסק מורשה ~300 ₪ + הפחתת דו"ח שנתי</td></tr>
+          <tr><td>משפטי/ציות/שונות (מופחת)</td><td class="n">~200 ₪</td><td>פריסת עלויות חד-פעמיות</td></tr>
+          <tr class="total-row"><td>סה"כ עלויות קשיחות</td><td class="n">~1,300–1,600 ₪</td><td>לפני שיווק ולפני משכורת מייסד</td></tr>
+          <tr><td>שיווק/רכישת לקוחות (מוקדם, צנוע)</td><td class="n">~1,500–3,000 ₪</td><td>בעיקר תוכן, קהילות, פיילוטים</td></tr>
+          <tr class="total-row"><td>סה"כ קבועים תפעוליים</td><td class="n">~3,000 ₪</td><td>בסיס למודל נקודת האיזון</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:19px;margin:22px 0 8px">3 · איך התשתית האמיתית מתנהגת בקנה מידה</h3>
+    <p>שלוש תובנות על המחסנית שלך (Convex · Clerk · n8n) שקובעות אם העלויות נשארות שטוחות:</p>
+    <ul class="clean" style="margin-bottom:14px">
+      <li><b>Clerk — שלושת התפקידים לא מפוצצים את ה-Auth.</b> זו הדאגה הטבעית: מטופלים כמשתמשים. אבל השכבה החינמית של Clerk היא 50,000 MRU, והחיוב לפי משתמש <i>חוזר</i> בלבד. גם ב-500 מטפלים × עשרות מטופלים אתה סביב הגבול החינמי — Clerk נשאר ~$0–25 הרבה מעבר למדרגה 2.</li>
+      <li><b>n8n חובה לארח בעצמך (self-host).</b> זה המקום היחיד שעלול להתפוצץ: הענן מתומחר לפי executions, ו-workflow פר-אירוע-מטופל שורף 2,500 executions תוך ימים. Community Edition = executions בלתי מוגבלים תמורת ~$5–10 VPS. ההחלטה התשתיתית הכי חשובה לקנה מידה.</li>
+      <li><b>Convex</b> מתומחר per-seat ($25/מפתח) — לא לפי משתמשי קצה. אחסון טקסט זניח ($0.22/GB); נתב מדיה כבדה (אודיו/סריקות) ל-object storage זול. שים לב למכפיל EU 1.3x.</li>
+      <li><b>נצל תוכניות סטארטאפ:</b> Convex נותנת עד שנה Pro חינם; n8n נותנת 50% הנחה ל-Business. דוחה עלויות אמיתיות מהשנה הראשונה.</li>
+    </ul>
+    <p class="note"><b>מסקנת מבנה העלויות:</b> גם עם המחסנית האמיתית, זהו עסק SaaS קלאסי — עלות שולית נמוכה מאוד למשתמש נוסף, שוליים גולמיים של ~85% (מאומת ב-BM-001), ותשתית שנשארת ~750–1,850 ₪/חודש אפילו ב-500 מטפלים מול MRR של ~70K ₪. שאלת הרווחיות היא שאלה של <b>נפח לקוחות</b>, לא של ניהול עלויות.</p>
+  </div>
+</section>
+
+<!-- ============ BREAK-EVEN LADDER (signature) ============ -->
+<section id="breakeven">
+  <div class="wrap">
+    <span class="eyebrow">חלק ה' · נקודת איזון</span>
+    <h2 class="title">סולם הרווחיות — שלוש מדרגות</h2>
+    <p class="sub">"רווחיות" אינה מספר אחד. יש שלושה ספים שונים, וכל אחד עונה על שאלה אחרת. זה לב התשובה שלך.</p>
+
+    <div class="ladder">
+      <div class="rung r1">
+        <div class="step">מדרגה 1 · הישרדות</div>
+        <div class="big num">~25<small> מטפלים</small></div>
+        <div class="desc">ההכנסה מכסה את כל העלויות הקשיחות + שיווק צנוע (~3,000 ₪/חודש). העסק כבר לא "שורף" כסף.</div>
+        <div class="when">⏱ ניתן להגיע תוך מספר חודשים מסיום הפיילוט</div>
+      </div>
+      <div class="rung r2">
+        <div class="step">מדרגה 2 · פרנסה</div>
+        <div class="big num">~200<small> מטפלים</small></div>
+        <div class="desc">מעבר לקבועים, ההכנסה מכסה גם משכורת מייסד סבירה (~20,000 ₪/חודש). זו "רווחיות אמיתית" עבורך.</div>
+        <div class="when">⏱ תרחיש בסיס: סביב חודש 18–22</div>
+      </div>
+      <div class="rung r3">
+        <div class="step">מדרגה 3 · עסק צמיחה</div>
+        <div class="big num">~400–500<small></small></div>
+        <div class="desc">מכסה מייסד במשרה מלאה + תמיכה/שיווק במשרה חלקית + תקציב צמיחה. בסיס לגיוס או לעסק עצמאי בריא.</div>
+        <div class="when">⏱ תרחיש בסיס: שנה 3</div>
+      </div>
+    </div>
+
+    <p style="margin-top:20px">החישוב פשוט וניתן לבדיקה: <b>מספר מטפלים לאיזון = (עלויות קבועות חודשיות) ÷ (שולי תרומה למטפל ~115 ₪)</b>.</p>
+    <div class="tablecard">
+      <table>
+        <caption>נקודת איזון לפי רמת מבנה הוצאות</caption>
+        <thead><tr><th>תרחיש עלויות</th><th class="n">קבועים חודשיים</th><th class="n">מטפלים לאיזון</th><th class="n">% מ-SAM</th></tr></thead>
+        <tbody>
+          <tr><td>עלויות קשיחות בלבד (ללא שיווק/משכורת)</td><td class="n">~1,400 ₪</td><td class="n">~13</td><td class="n">0.08%</td></tr>
+          <tr><td>+ שיווק צנוע</td><td class="n">~3,000 ₪</td><td class="n">~26</td><td class="n">0.15%</td></tr>
+          <tr><td>+ משכורת מייסד (20K)</td><td class="n">~23,000 ₪</td><td class="n">~200</td><td class="n">~1.1%</td></tr>
+          <tr><td>+ מייסד מלא + תמיכה/שיווק + צמיחה</td><td class="n">~55,000 ₪</td><td class="n">~480</td><td class="n">~2.6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><b>הנקודה החשובה:</b> כל ארבעת הספים הם אחוז זעיר מ-SAM. השוק בהחלט יכול "להחזיק" אותך. השאלה האמיתית היא תוך כמה זמן תגיע אליהם — וזה תלוי בקצב האימוץ, שאליו נעבור עכשיו.</p>
+  </div>
+</section>
+
+<!-- ============ PROJECTIONS ============ -->
+<section id="projections">
+  <div class="wrap">
+    <span class="eyebrow">חלק ו' · תחזיות</span>
+    <h2 class="title">שלושה תרחישי אימוץ ל-36 חודשים</h2>
+    <p class="sub">לא חיזוי — אלא טווח. כל תרחיש מניח קצב צבירה שונה של מטפלים משלמים ומתאר מתי חוצים כל מדרגת רווחיות.</p>
+
+    <div class="tablecard">
+      <table>
+        <caption>מטפלים משלמים בסוף כל שנה</caption>
+        <thead><tr><th>תרחיש</th><th class="n">שנה 1</th><th class="n">שנה 2</th><th class="n">שנה 3</th><th class="n">ARR בשנה 3 (₪)*</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag t">שמרני</span></td><td class="n">40</td><td class="n">120</td><td class="n">250</td><td class="n">~420K</td></tr>
+          <tr><td><span class="tag g">בסיס</span></td><td class="n">80</td><td class="n">250</td><td class="n">500</td><td class="n">~840K</td></tr>
+          <tr><td><span class="tag a">אופטימי</span></td><td class="n">150</td><td class="n">500</td><td class="n">1,100</td><td class="n">~1.85M</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--muted);margin-top:-6px">* ARR = מטפלים × 140 ₪ × 12. מניח ARPU יציב; בפועל ARPU צפוי לעלות עם הוספת מסלולי קליניקה רב-מטפלים ושימוש גובר ב-AI.</p>
+
+    <div class="tablecard">
+      <table>
+        <caption>מתי חוצים כל מדרגת רווחיות</caption>
+        <thead><tr><th>מדרגה</th><th class="n">שמרני</th><th class="n">בסיס</th><th class="n">אופטימי</th></tr></thead>
+        <tbody>
+          <tr><td>1 · איזון תזרימי (~25)</td><td class="n">חודש ~7–9</td><td class="n">חודש ~4–6</td><td class="n">חודש ~3–4</td></tr>
+          <tr><td>2 · משכורת מייסד (~200)</td><td class="n">~חודש 30+</td><td class="n">~חודש 18–22</td><td class="n">~חודש 12–14</td></tr>
+          <tr><td>3 · עסק צמיחה (~480)</td><td class="n">מעבר ל-36</td><td class="n">~שנה 3</td><td class="n">~חודש 20–24</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:19px;margin:18px 0 8px">תזרים מזומנים — דוגמת תרחיש הבסיס</h3>
+    <div class="tablecard">
+      <table>
+        <thead><tr><th>נקודת זמן</th><th class="n">מטפלים</th><th class="n">הכנסה חודשית</th><th class="n">קבועים (כולל משכורת)</th><th class="n">תזרים חודשי</th></tr></thead>
+        <tbody>
+          <tr><td>סוף שנה 1</td><td class="n">80</td><td class="n">~11,200 ₪</td><td class="n">~8,000 ₪</td><td class="n" style="color:var(--pos);font-weight:600">+~3,200 ₪</td></tr>
+          <tr><td>אמצע שנה 2 (~חודש 20)</td><td class="n">~200</td><td class="n">~28,000 ₪</td><td class="n">~25,000 ₪</td><td class="n" style="color:var(--pos);font-weight:600">+~3,000 ₪</td></tr>
+          <tr><td>סוף שנה 2</td><td class="n">250</td><td class="n">~35,000 ₪</td><td class="n">~28,000 ₪</td><td class="n" style="color:var(--pos);font-weight:600">+~7,000 ₪</td></tr>
+          <tr><td>סוף שנה 3</td><td class="n">500</td><td class="n">~70,000 ₪</td><td class="n">~55,000 ₪</td><td class="n" style="color:var(--pos);font-weight:600">+~15,000 ₪</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><b>קריאת התרחישים:</b> בכל שלושת התרחישים העסק מפסיק לשרוף מזומן מוקדם מאוד. ההבדל בין התרחישים אינו "האם תהיה רווחי" אלא "תוך כמה זמן תקבל ממנו משכורת ראויה". זו הסיבה שהמינוף הגדול ביותר שלך הוא בהאצת קצב האימוץ בשנה הראשונה.</p>
+  </div>
+</section>
+
+<!-- ============ PATH + FUNDING ============ -->
+<section id="path">
+  <div class="wrap">
+    <span class="eyebrow">חלק ז' · מסלול הפעולה</span>
+    <h2 class="title">איך מגיעים לשם — ומימון לא מדלל</h2>
+    <p class="sub">רצף שלבים מהפיילוט ועד עסק צמיחה, עם מינוף רשות החדשנות להארכת מסלול.</p>
+
+    <div class="tl">
+      <div class="tlitem"><div class="ph">שלב 0 · עכשיו</div><h4>פיילוט → לקוחות משלמים ראשונים</h4><p>להמיר את משתמשי הפיילוט למשלמים, לחדד תמחור מנוי+קרדיטים על נתוני שימוש אמיתיים, ולאסוף 5–10 עדויות (testimonials) לקהילות.</p></div>
+      <div class="tlitem"><div class="ph">שלב 1 · חודשים 1–6</div><h4>חצייה של מדרגה 1 (~25 משלמים)</h4><p>הפצה אורגנית בערוצי אמון: פסיכולוגיה עברית, בטיפולנט, קבוצות מטפלים, איגודים. תוכן על "בין הפגישות". להישאר עוסק מורשה — רזה וזריז.</p></div>
+      <div class="tlitem"><div class="ph">שלב 2 · חודשים 6–18</div><h4>מנוע צמיחה + מימון רשות החדשנות</h4><p>לגשת למסלול תנופה/Pre-Seed (מענק לא-מדלל שמכסה חלק ניכר מתקציב מאושר) כדי לממן שיווק ופיתוח מבלי לדלל בעלות. כאן מצדיק מעבר לחברה בע"מ.</p></div>
+      <div class="tlitem"><div class="ph">שלב 3 · חודשים 18–24</div><h4>חצייה של מדרגה 2 (~200) → משכורת מייסד</h4><p>הוספת מסלול קליניקה רב-מטפלים (ARPU גבוה יותר), העמקת ה-AI כמרכז רווח, והתחלת שירות לקוחות במיקור-חוץ חלקי.</p></div>
+      <div class="tlitem"><div class="ph">שלב 4 · שנה 3</div><h4>מדרגה 3 (~480+) → עסק צמיחה</h4><p>צוות קטן, החלטה אסטרטגית: להמשיך כעסק רווחי עצמאי (lifestyle/bootstrapped) או לגייס סבב לצמיחה אגרסיבית.</p></div>
+    </div>
+
+    <div class="callout-amber">
+      <h4>מינוף רשות החדשנות (לא-מדלל)</h4>
+      <p style="margin:0">סיפור ה-AI והחיפוש הווקטורי (Pinecone) של GuideBox הוא בדיוק מה שמסלולי תנופה/Pre-Seed אוהבים — "טכנולוגיה חדשנית". מענק כזה יכול לכסות חלק משמעותי מתקציב הפיתוח והשיווק בשנה 1–2, ובכך <b>להזיז את מדרגה 2 קרוב יותר</b> בלי לוותר על אחזקה. שווה למפות את התנאים העדכניים ולתזמן הגשה לפני הרחבת השיווק.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RISKS ============ -->
+<section id="risks">
+  <div class="wrap">
+    <span class="eyebrow">חלק ח' · סיכונים ורגישויות</span>
+    <h2 class="title">מה יכול לשבור את המודל</h2>
+    <p class="sub">המספרים אופטימיים רק אם ההנחות מחזיקות. אלה המשתנים שהכי משפיעים — ומה לעשות לגביהם.</p>
+    <div class="grid2">
+      <div class="card risk">
+        <h4>קצב אימוץ איטי מהצפוי</h4>
+        <p style="font-size:14.5px;margin:0">הסיכון מספר 1. קהל שמרן + מתחרים מבוססים = מחזור מכירה ארוך. <b>מענה:</b> פיילוטים ממוקדים, מסלול חינם/ניסיון ארוך, ומיקוד הפצה בקהילות אמון במקום פרסום משלם.</p>
+      </div>
+      <div class="card risk">
+        <h4>תמחור קרדיטים שגוי</h4>
+        <p style="font-size:14.5px;margin:0">אם נותנים יותר מדי AI חינם — השוליים נשחקים. <b>מענה:</b> מכסת חינם מוגדרת באונבורדינג, מעקב עלות LLM אפקטיבית למשתמש, ותמחור קרדיט עם מרווח בריא מעל העלות.</p>
+      </div>
+      <div class="card risk">
+        <h4>לחץ מחיר מ-CliniKit / שכבת חינם</h4>
+        <p style="font-size:14.5px;margin:0">מתחרה ב-90 ₪ ובייס בחינם מקבעים תקרת מחיר. <b>מענה:</b> לא להתחרות במחיר אלא בערך ה"בין הפגישות" וב-AI איכותי — להצדיק פרמיה.</p>
+      </div>
+      <div class="card risk">
+        <h4>רגולציה ואבטחת מידע רפואי</h4>
+        <p style="font-size:14.5px;margin:0">מידע קליני רגיש = אחריות וציות. <b>מענה:</b> הצפנה, DPA, ויתור סודיות מובנה (כבר בתכנון), והפיכת האבטחה לטיעון מכירה ולא רק לעלות.</p>
+      </div>
+    </div>
+    <p class="note"><b>רגישות מרכזית:</b> ה-ARPU הוא המנוף הכי חזק על אופק הרווחיות. העלאת ARPU מ-140 ל-170 ₪ (למשל דרך מסלולי קליניקה ושימוש גובר ב-AI) מורידה את מדרגה 2 מ-~200 ל-~150 מטפלים — קיצור של חודשים. כדאי להשקיע בהרחבת ARPU לפחות כמו בהשגת לקוחות חדשים.</p>
+  </div>
+</section>
+
+<!-- ============ RECOMMENDATIONS ============ -->
+<section id="reco" style="border-bottom:none">
+  <div class="wrap">
+    <span class="eyebrow">חלק ט' · המלצות</span>
+    <h2 class="title">חמש פעולות בעלות ההשפעה הגבוהה ביותר</h2>
+    <div class="tablecard" style="margin-top:8px">
+      <table>
+        <thead><tr><th class="n">#</th><th>פעולה</th><th>למה זה מזיז את הרווחיות</th></tr></thead>
+        <tbody>
+          <tr><td class="n">1</td><td><b>להישאר רזה (עוסק מורשה) עד מדרגה 1</b></td><td>שומר על קבועים נמוכים → איזון תזרימי כבר ב-~25 לקוחות.</td></tr>
+          <tr><td class="n">2</td><td><b>לתמחר את הקרדיטים עם מרווח, ולתחום חינם</b></td><td>הופך את ה-AI ממוקד-עלות למרכז רווח שגדל עם השימוש.</td></tr>
+          <tr><td class="n">3</td><td><b>להשקיע בהפצה אורגנית בקהילות אמון</b></td><td>הערוץ הזול והאמין ביותר לקהל הזה; מקצר את מחזור המכירה.</td></tr>
+          <tr><td class="n">4</td><td><b>להוסיף מסלול קליניקה רב-מטפלים מוקדם</b></td><td>מעלה ARPU ומוריד את מדרגה 2 קרוב יותר בזמן.</td></tr>
+          <tr><td class="n">5</td><td><b>לתזמן הגשה לרשות החדשנות לפני הרחבת השיווק</b></td><td>מימון לא-מדלל שמאיץ את הצמיחה בלי לוותר על אחזקה.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="answer" style="margin-top:22px">
+      <h3>במשפט אחד</h3>
+      <p style="margin:0">GuideBox הוא עסק עם <b>שוק מספיק גדול, שוליים גבוהים ועלויות נמוכות</b> — ולכן אינו מתקשה <i>להיות</i> רווחי, אלא להגיע לרווחיות <i>שמשלמת לך משכורת</i> מספיק מהר. כל המאמץ צריך להתמקד במשתנה האחד שקובע את הקצב: <span class="kbig">מהירות אימוץ × ARPU</span>.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h4>מקורות והנחות מרכזיות</h4>
+    <ol>
+      <li>היקף פסיכולוגים בעלי רישיון ועו"ס — נתוני משרד הבריאות (כוח אדם במקצועות הבריאות 2023, ~14,300 פסיכולוגים עד גיל 67) ומרכז טאוב/משרד הרווחה (~44,000 עו"ס רשומים, 2024).</li>
+      <li>תמחור מתחרים — אתרי המוצרים (CliniKit ~89.90 ₪, טיפולוג/Arbox, My-Cliniq, Clinicloud, בייס CRM, Medform), נכון לאמצע 2026.</li>
+      <li>עלויות AI — נתונים מדודים מ-Benchmark BM-001 (GuideBox, יוני 2026): $0.31–$0.62 למשתמש פעיל/חודש, על המחסנית n8n + Convex + Pinecone לאחר מעבר ל-Fan-out/Fan-in.</li>
+      <li>תמחור תשתית — Convex ($25 Pro per-seat, אחסון $0.22/GB, EU 1.3x, תוכנית סטארטאפ עד שנה חינם), Clerk (חינם עד 50K MRU, מעל זה $0.02/MRU), n8n (Community self-hosted בלתי מוגבל ~$5–10 VPS; ענן $20–60), Pinecone (Starter חינם / Standard $50).</li>
+      <li>תמחור LLM ברקע — מחירון Claude API (Haiku 4.5 ‎$1/$5‎, Sonnet 4.6 ‎$3/$15‎ למיליון טוקנים).</li>
+      <li>עלויות עסק בישראל — מחירוני רואי חשבון (עוסק מורשה ~300 ₪/חודש), שערי סליקה (~1.3%+, דמי בסיס ~65 ₪), אגרות רישום חברה.</li>
+      <li>מחיר ה-per-seat ושווי ה-₪ לקרדיט (רכיבי ARPU) — מהמודל ההיברידי שלך, לאימות. כל יחס המרה ₪/$ ב-~3.7.</li>
+    </ol>
+  </div>
+</footer>
+
+</body>
+</html>
